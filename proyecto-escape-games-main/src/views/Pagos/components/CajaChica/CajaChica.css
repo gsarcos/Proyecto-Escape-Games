@@ -1,0 +1,214 @@
+/* src/views/Pagos/components/CajaChica/CajaChica.css */
+
+.caja-container {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+.caja-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Resumen superior de Saldos */
+.caja-resumen {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.caja-resumen-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.caja-resumen-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+}
+
+.caja-resumen-value {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.caja-resumen-value--pos { 
+  color: #16a34a; 
+}
+
+.caja-resumen-value--neg { 
+  color: #dc2626; 
+}
+
+.caja-divider {
+  width: 1px;
+  height: 32px;
+  background: #e2e8f0;
+}
+
+/* Switchera de Filtros (Alineada al estilo naranja corporativo) */
+.caja-filtros {
+  display: flex;
+  gap: 0.25rem;
+  background: #f1f5f9;
+  border-radius: 6px;
+  padding: 0.25rem;
+}
+
+.caja-filtro-btn {
+  padding: 0.4rem 1rem;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.caja-filtro-btn:hover { 
+  color: #0f172a; 
+}
+
+.caja-filtro-btn--active {
+  background: #ffffff;
+  color: #f97316;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Lista de Movimientos */
+.caja-lista {
+  background: #ffffff;
+}
+
+.caja-empty {
+  text-align: center;
+  color: #94a3b8;
+  font-weight: 600;
+  padding: 3rem;
+  font-size: 0.9rem;
+}
+
+/* Renglón de Movimiento */
+.caja-item {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.12s;
+}
+
+.caja-item:last-child { 
+  border-bottom: none; 
+}
+
+.caja-item:hover { 
+  background: #f8fafc; 
+}
+
+/* Círculos de Iconos de Flujo */
+.caja-item-icono {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* Adaptación limpia del coloreado del icono según tipo */
+.caja-item:has(.caja-monto--pos) .caja-item-icono {
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+}
+
+.caja-item:has(.caja-monto--neg) .caja-item-icono {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fee2e2;
+}
+
+.caja-item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.caja-item-cliente {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.caja-item-meta {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.caja-item-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.caja-item-monto {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.caja-monto--pos { 
+  color: #16a34a; 
+}
+
+.caja-monto--neg { 
+  color: #0f172a; 
+}
+
+/* Estado de la Transacción en la Lista */
+.caja-item-estado {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.caja-estado--pagado { 
+  color: #16a34a; 
+}
+
+.caja-estado--pendiente { 
+  color: #c2410c; 
+}
+
+.caja-estado--reembolsado { 
+  color: #64748b; 
+}
+
+/* Ajustes de Pantalla Chica */
+@media (max-width: 640px) {
+  .caja-header { flex-direction: column; align-items: flex-start; }
+  .caja-resumen { gap: 1rem; width: 100%; justify-content: space-between; }
+  .caja-item { padding: 0.85rem 1rem; }
+}

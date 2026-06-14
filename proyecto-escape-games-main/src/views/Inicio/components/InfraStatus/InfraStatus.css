@@ -1,0 +1,128 @@
+.infra-status-container {
+  margin-top: 2rem;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 1.5rem;
+}
+
+.infra-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.infra-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+}
+
+.infra-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.infra-card h3 {
+  font-size: 1.1rem;
+  color: #1e293b;
+  margin: 0;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #cbd5e1;
+}
+
+.infra-desc {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin: 0.75rem 0 1.25rem 0;
+}
+
+.infra-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-badge {
+  font-size: 0.8rem;
+  font-weight: bold;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+}
+
+/* Clases dinámicas de estado para los botones y bordes */
+.infra-card.online {
+  border-left: 4px solid #10b981;
+}
+.infra-card.online .status-dot { background: #10b981; }
+.infra-card.online .status-badge { background: #d1fae5; color: #065f46; }
+
+.infra-card.offline {
+  border-left: 4px solid #ef4444;
+  background: #fdf2f2;
+}
+.infra-card.offline .status-dot { background: #ef4444; }
+.infra-card.offline .status-badge { background: #fee2e2; color: #991b1b; }
+
+.btn-toggle {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+.btn-toggle:hover {
+  background: #e2e8f0;
+}
+
+/* Alerta de contingencia operativa */
+.contingencia-alert {
+  margin-top: 1.5rem;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-left: 4px solid #f59e0b;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+.alert-icon { font-size: 1.5rem; }
+.alert-content h4 { margin: 0 0 0.25rem 0; color: #92400e; }
+.alert-content p { margin: 0; font-size: 0.9rem; color: #78350f; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+.animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+
+/* Monitor de Canales */
+.channels-monitor-section {
+  margin-top: 2rem;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 1.5rem;
+}
+.channels-monitor-section h3 { font-size: 1.1rem; color: #1e293b; margin-bottom: 1rem; }
+.channels-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.channel-box { display: flex; align-items: center; gap: 1rem; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0; }
+.channel-box.web { background: #f8fafc; }
+.channel-box.whatsapp { background: #f0fdf4; border-color: #bbf7d0; }
+.channel-icon { font-size: 1.75rem; }
+.channel-info h4 { margin: 0; font-size: 0.95rem; color: #334155; }
+.channel-count { margin: 0; font-size: 1.5rem; font-weight: bold; color: #1e293b; }
+.channel-count span { font-size: 0.85rem; font-weight: normal; color: #64748b; }

@@ -1,0 +1,43 @@
+/* src/views/inicio/components/metricCard/MetricCard.css */
+.metric-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+/* Modificadores limpios pasados por prop */
+.metric-card.blue {
+  border-left: 5px solid #3b82f6;
+}
+
+.metric-card.green {
+  border-left: 5px solid #10b981;
+}
+
+.metric-card.orange {
+  border-left: 5px solid #f59e0b;
+}
+
+.metric-card.yellow {
+  border-left: 5px solid #eab308;
+}
+
+.metric-label {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.metric-value {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}

@@ -1,0 +1,129 @@
+﻿/* src/views/Inicio/Inicio.css */
+
+.inicio-container {
+  font-family: Arial, sans-serif;
+  color: #1e293b;
+  max-width: 1100px;
+  margin: 0 auto;
+  animation: fadeIn 0.2s ease-out;
+  height: auto !important;          /* Quita cualquier tope de altura rigido */
+  min-height: 100vh;                /* Se estira como minimo el alto de la pantalla */
+  overflow-y: visible !important;   /* Permite explicitamente el scroll vertical */
+}
+
+.inicio-header {
+  margin-bottom: 32px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 16px;
+}
+
+.inicio-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #0f172a;
+  margin: 0 0 4px 0;
+}
+
+.inicio-date {
+  font-size: 14px;
+  color: #f97316; /* Acento naranja */
+  font-weight: 600;
+  margin: 0 0 6px 0;
+}
+
+.inicio-welcome {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+}
+
+.dashboard-section {
+  margin-bottom: 36px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #334155;
+  margin-bottom: 16px;
+}
+
+/* Grilla de operaciones diarias */
+.operaciones-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+
+.op-card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+}
+
+.op-card.total { border-left: 4px solid #3b82f6; }
+.op-card.confirmados { border-left: 4px solid #22c55e; }
+.op-card.pendientes { border-left: 4px solid #eab308; }
+
+.op-label {
+  font-size: 12px;
+  color: #64748b;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.op-value {
+  font-size: 32px;
+  font-weight: bold;
+  color: #0f172a;
+  margin-top: 8px;
+}
+
+/* Estilos del Pizarron de Notificaciones Internas */
+.pizarron-container {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.notif-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.notif-item:last-child {
+  border-bottom: none;
+}
+
+.notif-badge {
+  font-size: 10px;
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.notif-item.urgente .notif-badge { background: #fee2e2; color: #ef4444; }
+.notif-item.caja .notif-badge { background: #fef3c7; color: #d97706; }
+.notif-item.sistema .notif-badge { background: #e0f2fe; color: #0284c7; }
+
+.notif-text {
+  font-size: 14px;
+  color: #334155;
+  margin: 0;
+  line-height: 1.4;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

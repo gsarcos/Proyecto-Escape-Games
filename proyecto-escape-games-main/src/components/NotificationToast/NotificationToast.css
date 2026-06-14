@@ -1,0 +1,22 @@
+/* src/components/notification/NotificationToast.css */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background-color: #1e293b;
+  color: #f8fafc;
+  padding: 14px 24px;
+  border-radius: 8px;
+  border-left: 4px solid #f97316; /* Detalle naranja */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 9999;
+  animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideIn {
+  from { transform: translateY(100%) scale(0.9); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}

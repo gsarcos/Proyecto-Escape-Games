@@ -1,0 +1,367 @@
+/* src/views/Usuarios/Usuarios.css */
+
+.usr-container {
+  padding: 2rem;
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+/* Header de la vista */
+.usr-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.usr-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 0.25rem;
+}
+
+.usr-subtitle {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin: 0;
+  font-weight: 600;
+}
+
+/* Grid de Tarjetas de Usuarios */
+.usr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+
+/* Tarjeta de Usuario (Línea Estética Limpia) */
+.usr-card {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.25rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.usr-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Inicial del Avatar */
+.usr-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.usr-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.usr-nombre {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #334155;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.usr-email {
+  font-size: 0.8rem;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Badges de Roles del Personal */
+.usr-rol {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  width: fit-content;
+  margin-top: 2px;
+}
+
+.usr-rol--recepcionista {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+
+.usr-rol--analista {
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+}
+
+/* Panel de Acciones Sutiles */
+.usr-acciones {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.rv-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.rv-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.rv-btn--editar:hover:not(:disabled) { 
+  background: #f1f5f9; 
+  border-color: #cbd5e1; 
+}
+
+.rv-btn--eliminar:hover:not(:disabled) { 
+  background: #fee2e2; 
+  border-color: #fca5a5; 
+}
+
+/* Vista con Candado para Bloqueo de Seguridad */
+.usr-restricted {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1rem;
+  color: #64748b;
+  background-color: #f8fafc;
+}
+
+.usr-restricted-icon {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.usr-restricted h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.usr-restricted p {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* Modales Alineados con las Demás Vistas */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  backdrop-filter: blur(4px);
+}
+
+.modal {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.modal--sm { 
+  max-width: 420px; 
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.modal-header h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.12s;
+}
+.modal-close:hover { 
+  color: #334155; 
+}
+
+.modal-body { 
+  padding: 24px; 
+}
+
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  background: #f8fafc;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.modal-warn {
+  color: #475569;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0;
+}
+.modal-warn strong { 
+  color: #dc2626; 
+  font-weight: 700;
+}
+
+/* Grilla de Formularios Internos */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.form-field { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 6px; 
+}
+
+.form-field--full { 
+  grid-column: 1 / -1; 
+}
+
+.form-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.form-input {
+  padding: 10px 14px;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  color: #334155;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.15s, background-color 0.15s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-input:focus { 
+  border-color: #f97316;
+  background-color: #ffffff;
+}
+
+select.form-input {
+  cursor: pointer;
+}
+
+/* Botones de Operación (Naranja Corporativo) */
+.btn-primary {
+  padding: 10px 20px;
+  background: #f97316;
+  border: none;
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.btn-primary:hover { 
+  background: #ea580c; 
+}
+
+.btn-secondary {
+  padding: 10px 20px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  color: #475569;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.btn-secondary:hover { 
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.btn-danger {
+  padding: 10px 20px;
+  background: #dc2626;
+  border: none;
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-danger:hover { 
+  background: #b91c1c; 
+}
+
+/* Soporte Responsivo */
+@media (max-width: 640px) {
+  .usr-container { padding: 1rem; }
+  .usr-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .form-grid { grid-template-columns: 1fr; }
+}

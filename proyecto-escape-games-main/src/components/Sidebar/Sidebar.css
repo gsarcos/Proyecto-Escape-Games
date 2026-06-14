@@ -1,0 +1,194 @@
+/* src/components/Sidebar.css */
+
+.sidebar-container {
+  width: 260px;
+  background-color: #1e293b; /* Gris oscuro azulado */
+  color: #f8fafc;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  border-right: 1px solid #334155;
+}
+
+.sidebar-header {
+  padding: 24px;
+  border-bottom: 1px solid #334155;
+}
+
+.sidebar-brand {
+  margin: 0;
+  font-size: 22px;
+  font-weight: bold;
+  color: #f97316; /* Naranja cooperativo */
+  letter-spacing: 0.5px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 24px;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.sidebar-link-icon {
+  width: 18px;
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+.sidebar-link:hover {
+  background-color: #334155;
+  color: #f8fafc;
+}
+
+.sidebar-link:hover .sidebar-link-icon {
+  color: #cbd5e1;
+}
+
+.sidebar-link.active {
+  background-color: #f97316; /* Fondo naranja si está activo */
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.sidebar-link.active .sidebar-link-icon {
+  color: #ffffff;
+}
+
+.sidebar-footer {
+  padding: 20px;
+  border-top: 1px solid #334155;
+  background-color: #0f172a; /* Un tono más oscuro para el perfil */
+}
+
+.sidebar-profile-info {
+  margin-bottom: 14px;
+}
+
+.sidebar-profile-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f8fafc;
+  margin: 0;
+}
+
+.sidebar-profile-role {
+  font-size: 12px;
+  color: #38bdf8; /* Azul claro para resaltar el rol */
+  margin: 2px 0 0 0;
+  font-weight: bold;
+}
+
+.sidebar-logout-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #ef4444; /* Rojo para el botón de salir */
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.sidebar-logout-btn:hover {
+  background-color: #dc2626;
+}
+
+/* ... Todo lo anterior de Sidebar.css queda igual, reemplazamos desde el footer hacia abajo: */
+
+.sidebar-footer {
+  padding: 16px;
+  border-top: 1px solid #334155;
+  background-color: #111827; /* Fondo un poco más oscuro para destacar la sección */
+  box-sizing: border-box;
+}
+
+/* Contenedor Flex para alinear el Avatar y los Textos al lado */
+.sidebar-profile-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+}
+
+/* El círculo naranja con la inicial */
+.sidebar-avatar {
+  width: 40px;
+  height: 40px;
+  background-color: #f97316; /* Naranja cooperativo */
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+  flex-shrink: 0; /* Evita que se deforme si el texto es largo */
+}
+
+/* Bloque de textos al lado del avatar */
+.sidebar-profile-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar-profile-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: #f8fafc;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-profile-email {
+  font-size: 13px;
+  color: #64748b; /* Gris apagado para el correo secundario */
+  margin: 2px 0 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Botón de salir ajustado para que no compita visualmente */
+.sidebar-logout-btn {
+  width: 100%;
+  padding: 8px 12px;
+  background-color: transparent;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sidebar-logout-btn:hover {
+  background-color: #ef4444;
+  color: #ffffff;
+}

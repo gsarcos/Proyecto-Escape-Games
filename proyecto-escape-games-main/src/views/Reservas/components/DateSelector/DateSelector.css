@@ -1,0 +1,88 @@
+/* src/views/Reservas/components/DateSelector/DateSelector.css */
+
+.ds-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 5px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  font-family: Arial, sans-serif;
+}
+
+/* ── Botones < > ── */
+.ds-nav {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: #f9fafb;
+  color: #374151;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+  flex-shrink: 0;
+  user-select: none;
+}
+.ds-nav:hover {
+  background: #eef2ff;
+  border-color: #6366f1;
+  color: #4f46e5;
+}
+
+/* ── Label clickeable ── */
+.ds-label-wrapper {
+  position: relative;
+  cursor: pointer;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+}
+
+.ds-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+  white-space: nowrap;
+  pointer-events: none; /* el click lo captura el <label> */
+}
+
+/* El input nativo queda invisible encima del label
+   para que el picker del browser se abra al clickear */
+.ds-hidden-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+}
+
+/* ── Botón Hoy ── */
+.ds-hoy {
+  padding: 4px 11px;
+  border: 1px solid #c7d2fe;
+  border-radius: 6px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-size: 12px;
+  font-family: Arial, sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.12s, border-color 0.12s;
+  margin-left: 4px;
+}
+.ds-hoy:hover {
+  background: #e0e7ff;
+  border-color: #6366f1;
+}

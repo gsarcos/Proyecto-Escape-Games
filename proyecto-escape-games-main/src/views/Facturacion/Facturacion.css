@@ -1,0 +1,327 @@
+.facturacion-view-container {
+  padding: 2rem;
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+.facturacion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.facturacion-header h1,
+.periodo-card h2,
+.table-title-row h2,
+.cierre-rapido-section h2 {
+  color: #1e293b;
+  margin: 0;
+}
+
+.facturacion-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.facturacion-header .subtitle {
+  color: #64748b;
+  font-size: 1rem;
+  margin-top: 6px;
+}
+
+.btn-cierre-caja {
+  background-color: #1e293b;
+  color: #ffffff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s;
+}
+
+.btn-cierre-caja:hover {
+  background-color: #0f172a;
+}
+
+.periodo-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 18px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.periodo-card h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.periodo-card p {
+  margin: 4px 0 0;
+  color: #64748b;
+}
+
+.periodo-controles {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.periodo-controles label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.periodo-controles input {
+  min-width: 158px;
+  height: 42px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 0 12px;
+  outline: none;
+}
+
+.periodo-controles input:focus {
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.16);
+}
+
+.financial-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.table-container {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+.table-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 18px 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.table-title-row h2 {
+  font-size: 1.05rem;
+}
+
+.table-title-row span {
+  color: #64748b;
+  font-weight: 700;
+}
+
+.facturacion-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.facturacion-table th {
+  background: #f8fafc;
+  color: #64748b;
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  padding: 14px 24px;
+  border-bottom: 1px solid #e2e8f0;
+  letter-spacing: 0.05em;
+}
+
+.facturacion-table td {
+  padding: 16px 24px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.9rem;
+  color: #334155;
+  vertical-align: middle;
+}
+
+.facturacion-table tr:last-child td {
+  border-bottom: none;
+}
+
+.facturacion-table td.txt-monto {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.badge-metodo,
+.badge-estado {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.badge-metodo.web {
+  background-color: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+
+.badge-metodo.sucursal {
+  background-color: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+}
+
+.badge-estado.pendiente {
+  background-color: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fee2e2;
+}
+
+.badge-estado.facturado {
+  background-color: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+}
+
+.badge-estado.no-aplica {
+  background-color: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+}
+
+.btn-marcar-facturado {
+  background-color: #f97316;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+.btn-marcar-facturado:hover {
+  background-color: #ea580c;
+}
+
+.check-facturado-icon,
+.no-aplica-icon {
+  color: #64748b;
+  font-weight: 700;
+}
+
+.cierre-rapido-section {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+  margin-top: 1.5rem;
+}
+
+.cierre-rapido-section h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.cierre-grid-inputs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.input-fin-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input-fin-group label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.input-fin-group input {
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  outline: none;
+  background-color: #f8fafc;
+  color: #334155;
+}
+
+.input-fin-group input:not([disabled]) {
+  background-color: #ffffff;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.empty-row {
+  color: #94a3b8;
+  padding: 24px;
+}
+
+@media (max-width: 1180px) {
+  .financial-metrics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 820px) {
+  .facturacion-header,
+  .periodo-card,
+  .periodo-controles {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .financial-metrics-grid,
+  .cierre-grid-inputs {
+    grid-template-columns: 1fr;
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+
+  .facturacion-table {
+    min-width: 860px;
+  }
+}
