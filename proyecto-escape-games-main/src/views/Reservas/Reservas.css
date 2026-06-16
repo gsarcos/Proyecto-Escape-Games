@@ -477,6 +477,64 @@
   color: #9ca3af;
 }
 
+.rv-payment-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.rv-payment-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.rv-payment-item span {
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.rv-payment-label-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.rv-discount-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 2px 6px;
+  font-size: 9px;
+  line-height: 1;
+  font-weight: 900;
+  border: 1px solid transparent;
+}
+
+.rv-discount-badge--40 {
+  background: #fee2e2;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+
+.rv-discount-badge--25 {
+  background: #fef3c7;
+  border-color: #fde68a;
+  color: #b45309;
+}
+
+.rv-payment-item strong {
+  color: #111827;
+  font-size: 16px;
+}
+
 .rv-form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -572,6 +630,23 @@
 }
 .rv-btn-secondary:hover { background: #f9fafb; }
 
+.rv-btn-payment {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  background: #ff6b13;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 13px;
+  font-family: Arial, sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  margin-right: auto;
+}
+.rv-btn-payment:hover { background: #ea580c; }
+
 .rv-btn-danger {
   display: inline-flex;
   align-items: center;
@@ -605,5 +680,5 @@
     justify-content: space-between;
   }
 
-  .rv-info-grid, .rv-form-grid { grid-template-columns: 1fr; }
+  .rv-info-grid, .rv-form-grid, .rv-payment-summary { grid-template-columns: 1fr; }
 }

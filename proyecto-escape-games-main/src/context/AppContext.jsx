@@ -8,12 +8,24 @@ import {
   initialSystemStatus
 } from '../data/mockData';
 import { normalizeRoomHour, normalizeRoomName } from '../data/rooms';
+import { calcularResumenPagoReserva } from '../utils/reservasFinanzas';
 
 export const AppContext = createContext();
 
 const FACTURACION_STATE_VERSION = 'facturacion-demo-pendientes-v1';
 const RESERVAS_DATASET_VERSION = 'reservas-reales-enero-junio-v3';
 const PAYMENTS_DATASET_VERSION = 'pagos-planilla-ingresos-egresos-v2';
+
+const normalizarUsuario = (usuario) => {
+  if (usuario?.email?.toLowerCase() !== 'admin@escaperoom.com') return usuario;
+  return {
+    ...usuario,
+    nombre: 'Usuario Administrador',
+    rol: 'ADMINISTRADOR',
+  };
+};
+
+const normalizarUsuarios = (usuarios = []) => usuarios.map(normalizarUsuario);
 
 const normalizarReservas = (reservas = []) => {
   const porId = new Map();
@@ -73,7 +85,7 @@ const isoHoy = () => {
 export const AppProvider = ({ children }) => {
   const [users, setUsers] = useState(() => {
     const saved = localStorage.getItem('er_users');
-    return saved ? JSON.parse(saved) : initialUsers;
+    return normalizarUsuarios(saved ? JSON.parse(saved) : initialUsers);
   });
 
   const [reservations, setReservations] = useState(() => cargarReservasPersistidas());
@@ -94,14 +106,32 @@ export const AppProvider = ({ children }) => {
 
   const [currentUser, setCurrentUser] = useState(() => {
     const saved = localStorage.getItem('er_current_user');
-    return saved ? JSON.parse(saved) : null;
+    return saved ? normalizarUsuario(JSON.parse(saved)) : null;
   });
 
   const [currentView, setCurrentView] = useState('INICIO');
   const [toastMessage, setToastMessage] = useState('');
   const [fechaAuditoria, setFechaAuditoria] = useState(isoHoy());
+  const [paymentDraft, setPaymentDraft] = useState(null);
 
   useEffect(() => { setReservations((prev) => normalizarReservas(prev)); }, []);
+  useEffect(() => { setUsers((prev) => normalizarUsuarios(prev)); }, []);
+  useEffect(() => {
+    setReservations((prev) => {
+      let huboCambios = false;
+      const actualizadas = prev.map((reserva) => {
+        if (reserva.estado === 'Cancelada') return reserva;
+        const resumen = calcularResumenPagoReserva(reserva, payments);
+        if (!resumen.estaSaldada || (reserva.estado === 'Completada' && reserva.pago === 'Pagado')) {
+          return reserva;
+        }
+        huboCambios = true;
+        return { ...reserva, estado: 'Completada', pago: 'Pagado' };
+      });
+
+      return huboCambios ? actualizadas : prev;
+    });
+  }, [payments]);
   useEffect(() => { localStorage.setItem('er_users', JSON.stringify(users)); }, [users]);
   useEffect(() => { localStorage.setItem('er_reservations', JSON.stringify(reservations)); }, [reservations]);
   useEffect(() => { localStorage.setItem('er_payments', JSON.stringify(payments)); }, [payments]);
@@ -141,6 +171,7 @@ export const AppProvider = ({ children }) => {
       triggerToast,
       logout,
       fechaAuditoria, setFechaAuditoria,
+      paymentDraft, setPaymentDraft,
     }}>
       {children}
     </AppContext.Provider>

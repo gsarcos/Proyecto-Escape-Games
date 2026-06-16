@@ -112,6 +112,12 @@
   border: 1px solid #bfdbfe;
 }
 
+.usr-rol--administrador {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+
 .usr-rol--analista {
   background: #f0fdf4;
   color: #16a34a;

@@ -8,7 +8,7 @@ export { escapeRooms };
 export const initialUsers = [
   {
     id: 1,
-    nombre: "Recepcion Local",
+    nombre: "Usuario Administrador",
     email: "admin@escaperoom.com",
     password: "admin",
     rol: "ADMINISTRADOR"

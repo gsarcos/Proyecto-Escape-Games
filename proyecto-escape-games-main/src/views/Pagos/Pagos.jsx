@@ -1,13 +1,13 @@
 // src/views/Pagos/Pagos.jsx
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { AppContext } from '../../context/AppContext';
 import CajaChica from './components/CajaChica/CajaChica';
 import './Pagos.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { calcularResumenPagoReserva } from '../../utils/reservasFinanzas';
 
 const ESTADOS_PAGO = ['Pagado', 'Reembolsado'];
-const ESTADOS_RESERVA_INGRESO = ['Confirmado / Pagado', 'Pendiente'];
 const METODOS_PAGO = ['Efectivo', 'Tarjeta', 'Mercado Pago', 'Transferencia'];
 
 const estadoClass = (estado) => ({
@@ -34,16 +34,24 @@ const fechaHoy = () => {
 const crearFormVacio = () => ({
   cliente: '',
   reservaId: '',
+  sala: '',
   monto: '',
   tipo: 'Ingreso',
   metodo: 'Efectivo',
   estado: 'Pagado',
-  estadoReserva: 'Confirmado / Pagado',
   fecha: fechaHoy(),
 });
 
 export default function Pagos() {
-  const { payments = [], setPayments, reservations = [], setReservations, triggerToast } = useContext(AppContext);
+  const {
+    payments = [],
+    setPayments,
+    reservations = [],
+    setReservations,
+    paymentDraft,
+    setPaymentDraft,
+    triggerToast,
+  } = useContext(AppContext);
 
   const [tab, setTab] = useState('movimientos');
   const [modalEditar, setModalEditar] = useState(null);
@@ -80,6 +88,19 @@ export default function Pagos() {
     setModalAgregar(true);
   };
 
+  useEffect(() => {
+    if (!paymentDraft) return;
+
+    setFormNuevo({
+      ...crearFormVacio(),
+      ...paymentDraft,
+      tipo: paymentDraft.tipo || 'Ingreso',
+      fecha: paymentDraft.fecha || fechaHoy(),
+    });
+    setModalAgregar(true);
+    setPaymentDraft(null);
+  }, [paymentDraft, setPaymentDraft]);
+
   const abrirEditar = (pago) => {
     setFormEditar({ ...pago, estado: ESTADOS_PAGO.includes(pago.estado) ? pago.estado : 'Pagado' });
     setModalEditar(pago);
@@ -91,6 +112,7 @@ export default function Pagos() {
       ...prev,
       reservaId,
       cliente: reserva ? reserva.cliente : prev.cliente,
+      sala: reserva ? reserva.sala : prev.sala,
     }));
   };
 
@@ -103,17 +125,19 @@ export default function Pagos() {
     return clienteReserva && clienteForm && clienteReserva !== clienteForm ? reserva : null;
   };
 
-  const sincronizarReservaPorIngreso = (pago) => {
+  const sincronizarReservaPorIngreso = (pago, pagosActualizados) => {
     if (pago.tipo !== 'Ingreso' || !pago.reservaId || !reservasPorId.has(pago.reservaId)) return;
 
-    const reservaPagada = pago.estadoReserva === 'Confirmado / Pagado';
     setReservations((prev) => prev.map((reserva) => (
       reserva.id === pago.reservaId
-        ? {
-            ...reserva,
-            estado: reservaPagada ? 'Confirmada' : 'Pendiente',
-            pago: reservaPagada ? 'Pagado' : 'No Pagado',
-          }
+        ? (() => {
+            const resumen = calcularResumenPagoReserva(reserva, pagosActualizados);
+            return {
+              ...reserva,
+              estado: resumen.estaSaldada ? 'Completada' : 'Confirmada',
+              pago: resumen.estaSaldada ? 'Pagado' : 'No Pagado',
+            };
+          })()
         : reserva
     )));
   };
@@ -169,10 +193,13 @@ export default function Pagos() {
       facturacionEstado: formNuevo.tipo === 'Ingreso'
         ? estadoFacturacionPorMetodo(formNuevo.metodo)
         : undefined,
+      concepto: formNuevo.concepto || `${formNuevo.tipo === 'Ingreso' ? 'Pago' : 'Movimiento'} ${formNuevo.reservaId || ''}`.trim(),
+      descripcion: formNuevo.descripcion || `${formNuevo.tipo === 'Ingreso' ? 'Pago de reserva' : 'Egreso registrado'} ${formNuevo.reservaId || ''}`.trim(),
     };
 
-    setPayments((prev) => [nuevo, ...prev]);
-    sincronizarReservaPorIngreso(nuevo);
+    const pagosActualizados = [nuevo, ...payments];
+    setPayments(pagosActualizados);
+    sincronizarReservaPorIngreso(nuevo, pagosActualizados);
     setModalAgregar(false);
     setFormNuevo(crearFormVacio());
     triggerToast('Pago registrado correctamente');
@@ -354,6 +381,16 @@ export default function Pagos() {
                 </div>
 
                 <div className="form-field">
+                  <label className="form-label">Sala</label>
+                  <input
+                    className="form-input"
+                    placeholder="Sala"
+                    value={formNuevo.sala}
+                    onChange={(e) => setFormNuevo((prev) => ({ ...prev, sala: e.target.value }))}
+                  />
+                </div>
+
+                <div className="form-field">
                   <label className="form-label">Monto ($)</label>
                   <input
                     type="number"
@@ -372,24 +409,6 @@ export default function Pagos() {
                     onChange={(e) => setFormNuevo((prev) => ({ ...prev, metodo: e.target.value }))}
                   >
                     {METODOS_PAGO.map((metodo) => <option key={metodo}>{metodo}</option>)}
-                  </select>
-                </div>
-
-                <div className="form-field">
-                  <label className="form-label">
-                    {formNuevo.tipo === 'Ingreso' ? 'Estado de reserva' : 'Estado'}
-                  </label>
-                  <select
-                    className="form-input"
-                    value={formNuevo.tipo === 'Ingreso' ? formNuevo.estadoReserva : formNuevo.estado}
-                    onChange={(e) => setFormNuevo((prev) => (
-                      formNuevo.tipo === 'Ingreso'
-                        ? { ...prev, estadoReserva: e.target.value }
-                        : { ...prev, estado: e.target.value }
-                    ))}
-                  >
-                    {(formNuevo.tipo === 'Ingreso' ? ESTADOS_RESERVA_INGRESO : ESTADOS_PAGO)
-                      .map((estado) => <option key={estado}>{estado}</option>)}
                   </select>
                 </div>
 

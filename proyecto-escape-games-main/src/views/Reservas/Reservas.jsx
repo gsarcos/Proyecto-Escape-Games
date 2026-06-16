@@ -8,9 +8,19 @@ import './Reservas.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { escapeRooms, roomSchedules } from '../../data/rooms';
+import { calcularResumenPagoReserva } from '../../utils/reservasFinanzas';
 
 export default function Reservas() {
-  const { reservations = [], setReservations, fechaAuditoria, triggerToast } = useContext(AppContext);
+  const {
+    reservations = [],
+    setReservations,
+    payments = [],
+    fechaAuditoria,
+    triggerToast,
+    currentUser,
+    setCurrentView,
+    setPaymentDraft,
+  } = useContext(AppContext);
 
   const [busqueda, setBusqueda]         = useState('');
   const [estadoFiltro, setEstadoFiltro] = useState('Todos');
@@ -103,10 +113,18 @@ export default function Reservas() {
       && (estadoFiltro === 'Todos' || res.estado === estadoFiltro);
   });
 
+  const modalVerActual = modalVer ? reservations.find((reserva) => reserva.id === modalVer.id) || modalVer : null;
+  const resumenModal = modalVerActual ? calcularResumenPagoReserva(modalVerActual, payments) : null;
+  const puedeGenerarPagoRapido = currentUser?.rol === 'ANALISTA';
+
   const abrirEditar = (r) => { setFormEditar({ ...r }); setModalEditar(r); };
 
   const guardarEdicion = () => {
-    setReservations(prev => prev.map(r => r.id === formEditar.id ? { ...formEditar } : r));
+    const resumenEditado = calcularResumenPagoReserva(formEditar, payments);
+    const reservaEditada = resumenEditado.estaSaldada
+      ? { ...formEditar, estado: 'Completada', pago: 'Pagado' }
+      : { ...formEditar };
+    setReservations(prev => prev.map(r => r.id === formEditar.id ? reservaEditada : r));
     setModalEditar(null);
     triggerToast('Reserva actualizada correctamente');
   };
@@ -115,6 +133,18 @@ export default function Reservas() {
     setReservations(prev => prev.filter(r => r.id !== modalEliminar.id));
     setModalEliminar(null);
     triggerToast('Reserva eliminada');
+  };
+
+  const generarPagoDesdeReserva = (reserva) => {
+    setPaymentDraft({
+      tipo: 'Ingreso',
+      cliente: reserva.cliente || '',
+      sala: reserva.sala || '',
+      reservaId: reserva.id || '',
+      fecha: fechaAuditoria,
+    });
+    setModalVer(null);
+    setCurrentView('PAGOS');
   };
 
   const estadoBadgeClass = (estado) => `badge-status ${estado?.toLowerCase() || 'confirmada'}`;
@@ -283,7 +313,7 @@ export default function Reservas() {
         </div>
       </div>
 
-      {modalVer && (
+      {modalVerActual && (
         <div className="rv-modal-overlay" onClick={() => setModalVer(null)}>
           <div className="rv-modal" onClick={(e) => e.stopPropagation()}>
             <div className="rv-modal-header">
@@ -294,50 +324,76 @@ export default function Reservas() {
               <div className="rv-info-grid">
                 <div className="rv-info-block rv-info-block--full">
                   <span className="rv-info-label">Cliente</span>
-                  <span className="rv-info-value rv-info-value--lg">{modalVer.cliente}</span>
-                  <span className="rv-info-sub">{telefonoVisible(modalVer)}</span>
+                  <span className="rv-info-value rv-info-value--lg">{modalVerActual.cliente}</span>
+                  <span className="rv-info-sub">{telefonoVisible(modalVerActual)}</span>
                 </div>
                 <div className="rv-info-block">
                   <span className="rv-info-label">ID Reserva</span>
-                  <span className="rv-info-value rv-info-value--mono">{modalVer.id}</span>
+                  <span className="rv-info-value rv-info-value--mono">{modalVerActual.id}</span>
                 </div>
                 <div className="rv-info-block">
                   <span className="rv-info-label">Sala</span>
-                  <span className="rv-info-value">{modalVer.sala}</span>
+                  <span className="rv-info-value">{modalVerActual.sala}</span>
                 </div>
                 <div className="rv-info-block">
                   <span className="rv-info-label">Fecha</span>
-                  <span className="rv-info-value">{formatFecha(modalVer.fecha)}</span>
+                  <span className="rv-info-value">{formatFecha(modalVerActual.fecha)}</span>
                 </div>
                 <div className="rv-info-block">
                   <span className="rv-info-label">Hora</span>
-                  <span className="rv-info-value">{modalVer.hora}</span>
+                  <span className="rv-info-value">{modalVerActual.hora}</span>
                 </div>
                 <div className="rv-info-block">
                   <span className="rv-info-label">Personas</span>
-                  <span className="rv-info-value">{modalVer.personas}</span>
+                  <span className="rv-info-value">{modalVerActual.personas}</span>
                 </div>
                 <div className="rv-info-block">
                   <span className="rv-info-label">Canal</span>
-                  <span className="rv-info-value">{modalVer.canal}</span>
+                  <span className="rv-info-value">{modalVerActual.canal}</span>
                 </div>
                 <div className="rv-info-block">
                   <span className="rv-info-label">Estado</span>
-                  <span className={estadoBadgeClass(modalVer.estado)}>
-                    <span className="status-indicator-dot"></span> {modalVer.estado}
+                  <span className={estadoBadgeClass(modalVerActual.estado)}>
+                    <span className="status-indicator-dot"></span> {modalVerActual.estado}
                   </span>
                 </div>
                 <div className="rv-info-block">
                   <span className="rv-info-label">Pago</span>
-                  <span className={pagoBadgeClass(modalVer.pago)}>
-                    <i className="fa-solid fa-wallet icon-wallet"></i> {modalVer.pago}
+                  <span className={pagoBadgeClass(modalVerActual.pago)}>
+                    <i className="fa-solid fa-wallet icon-wallet"></i> {modalVerActual.pago}
                   </span>
+                </div>
+                <div className="rv-payment-summary rv-info-block--full">
+                  <div className="rv-payment-item">
+                    <span className="rv-payment-label-row">
+                      Total reserva
+                      {resumenModal.descuentoPorcentaje > 0 && (
+                        <small className={`rv-discount-badge rv-discount-badge--${resumenModal.descuentoPorcentaje}`}>
+                          {resumenModal.descuentoPorcentaje}% OFF
+                        </small>
+                      )}
+                    </span>
+                    <strong>$ {resumenModal.totalReserva.toLocaleString('es-AR')}</strong>
+                  </div>
+                  <div className="rv-payment-item">
+                    <span>Seña pagada</span>
+                    <strong>$ {resumenModal.seniaPagada.toLocaleString('es-AR')}</strong>
+                  </div>
+                  <div className="rv-payment-item">
+                    <span>Saldo por abonar</span>
+                    <strong>$ {resumenModal.saldo.toLocaleString('es-AR')}</strong>
+                  </div>
                 </div>
               </div>
             </div>
             <div className="rv-modal-footer">
+              {puedeGenerarPagoRapido && (
+                <button className="rv-btn-payment" onClick={() => generarPagoDesdeReserva(modalVerActual)}>
+                  <i className="fa-solid fa-money-bill-transfer"></i> Generar pago
+                </button>
+              )}
               <button className="rv-btn-secondary" onClick={() => setModalVer(null)}>Cerrar</button>
-              <button className="rv-btn-primary" onClick={() => { setModalVer(null); abrirEditar(modalVer); }}>
+              <button className="rv-btn-primary" onClick={() => { setModalVer(null); abrirEditar(modalVerActual); }}>
                 <i className="fa-solid fa-pen"></i> Editar
               </button>
             </div>
