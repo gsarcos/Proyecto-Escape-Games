@@ -115,7 +115,7 @@ export default function Reservas() {
 
   const modalVerActual = modalVer ? reservations.find((reserva) => reserva.id === modalVer.id) || modalVer : null;
   const resumenModal = modalVerActual ? calcularResumenPagoReserva(modalVerActual, payments) : null;
-  const puedeGenerarPagoRapido = currentUser?.rol === 'ANALISTA';
+  const puedeGenerarPagoRapido = currentUser?.rol === 'RECEPCIONISTA';
 
   const abrirEditar = (r) => { setFormEditar({ ...r }); setModalEditar(r); };
 

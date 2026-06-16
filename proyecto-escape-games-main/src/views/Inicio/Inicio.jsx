@@ -39,9 +39,6 @@ export default function Inicio() {
         <p className="fecha-sistema">
           Prevision: {fechaCalendario.toLocaleDateString('es-AR', { month: 'long', year: 'numeric' })}
         </p>
-        <span className="sesion-activa">
-          Sesion activa: <strong>Recepcion Local</strong> (RECEPCIONISTA)
-        </span>
       </div>
 
       <div className="operaciones-grid">

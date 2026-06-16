@@ -1,4 +1,3 @@
-// src/components/sidebar/Sidebar.jsx
 import { useContext } from 'react';
 import { AppContext } from '../../context/AppContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -20,7 +19,13 @@ export default function Sidebar() {
   if (!currentUser) return null;
 
   const inicial = currentUser.nombre ? currentUser.nombre.charAt(0).toUpperCase() : 'U';
-  const puedeVerModulosAdmin = currentUser.rol !== 'ANALISTA';
+  
+  // Forzamos mayúsculas para que matchee con los roles normalizados
+  const rol = currentUser.rol?.toUpperCase() || 'RECEPCIONISTA';
+
+  // Definición exacta de permisos para los botones
+  const esAdminOGerente = rol === 'ADMIN' || rol === 'MANAGMENT' || rol === 'ANALISTA';
+  const esAnalistaExclusivo = rol === 'ANALISTA';
 
   return (
     <aside className="sidebar-container">
@@ -29,6 +34,7 @@ export default function Sidebar() {
       </div>
 
       <nav className="sidebar-nav">
+        {/* VISTAS COMUNES (Todos los roles ingresan) */}
         <button
           onClick={() => setCurrentView('INICIO')}
           className={`sidebar-link ${currentView === 'INICIO' ? 'active' : ''}`}
@@ -61,7 +67,8 @@ export default function Sidebar() {
           <span>Facturacion</span>
         </button>
 
-        {puedeVerModulosAdmin && (
+        {/* VISTAS PARA GERENTES/SOCIOS (ADMIN) Y ANALISTAS */}
+        {esAdminOGerente && (
           <>
             <button
               onClick={() => setCurrentView('REPORTES')}
@@ -81,22 +88,25 @@ export default function Sidebar() {
           </>
         )}
 
-        <button
-          onClick={() => setCurrentView('INTEGRACION')}
-          className={`sidebar-link ${currentView === 'INTEGRACION' ? 'active' : ''}`}
-        >
-          <FontAwesomeIcon className="sidebar-link-icon" icon={faPlug} />
-          <span>Integracion</span>
-        </button>
+        {/* VISTAS EXCLUSIVAS DEL ANALISTA */}
+        {esAnalistaExclusivo && (
+          <>
+            <button
+              onClick={() => setCurrentView('INTEGRACION')}
+              className={`sidebar-link ${currentView === 'INTEGRACION' ? 'active' : ''}`}
+            >
+              <FontAwesomeIcon className="sidebar-link-icon" icon={faPlug} />
+              <span>Integracion</span>
+            </button>
 
-        {puedeVerModulosAdmin && (
-          <button
-            onClick={() => setCurrentView('USUARIOS')}
-            className={`sidebar-link ${currentView === 'USUARIOS' ? 'active' : ''}`}
-          >
-            <FontAwesomeIcon className="sidebar-link-icon" icon={faUsers} />
-            <span>Usuarios</span>
-          </button>
+            <button
+              onClick={() => setCurrentView('USUARIOS')}
+              className={`sidebar-link ${currentView === 'USUARIOS' ? 'active' : ''}`}
+            >
+              <FontAwesomeIcon className="sidebar-link-icon" icon={faUsers} />
+              <span>Usuarios</span>
+            </button>
+          </>
         )}
       </nav>
 
@@ -108,6 +118,9 @@ export default function Sidebar() {
           <div className="sidebar-profile-info">
             <p className="sidebar-profile-name">{currentUser.nombre}</p>
             <p className="sidebar-profile-email">{currentUser.email}</p>
+            <span className="sidebar-profile-role" style={{ fontSize: '11px', color: '#f97316', fontWeight: 'bold' }}>
+              {rol}
+            </span>
           </div>
         </div>
 

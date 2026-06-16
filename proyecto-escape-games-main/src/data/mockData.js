@@ -8,18 +8,25 @@ export { escapeRooms };
 export const initialUsers = [
   {
     id: 1,
-    nombre: "Usuario Administrador",
-    email: "admin@escaperoom.com",
-    password: "admin",
-    rol: "ADMINISTRADOR"
+    nombre: 'Analista Tecnico',
+    email: 'analista@escaperoom.com',
+    password: 'admin',
+    rol: 'analista',
   },
   {
     id: 2,
-    nombre: "Analista Tecnico",
-    email: "analista@escaperoom.com",
-    password: "admin",
-    rol: "ANALISTA"
-  }
+    nombre: 'Recepcionista Demo',
+    email: 'recepcion@escaperoom.com',
+    password: 'admin',
+    rol: 'recepcionista',
+  },
+  {
+    id: 3,
+    nombre: 'Socio Demo',
+    email: 'socio@escaperoom.com',
+    password: 'admin',
+    rol: 'managment',
+  },
 ];
 
 // 2. LISTADO DE SALAS (Para los selectores de los formularios de agregar/editar)

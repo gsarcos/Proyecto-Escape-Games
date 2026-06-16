@@ -10,6 +10,7 @@ import { calcularResumenPagoReserva } from '../../utils/reservasFinanzas';
 const ESTADOS_PAGO = ['Pagado', 'Reembolsado'];
 const METODOS_PAGO = ['Efectivo', 'Tarjeta', 'Mercado Pago', 'Transferencia'];
 
+
 const estadoClass = (estado) => ({
   Pagado: 'badge badge--pagado',
   Reembolsado: 'badge badge--reembolsado',
@@ -213,6 +214,13 @@ export default function Pagos() {
     .reduce((acc, pago) => acc + Number(pago.monto || 0), 0);
   const reservaConError = reservaIdConOtroCliente();
 
+
+  
+
+  const totalEfectivo = pagosFiltrados
+    .filter((pago) => pago.metodo === 'Efectivo' && pago.tipo === 'Ingreso' && pago.estado === 'Pagado')
+    .reduce((acc, pago) => acc + Number(pago.monto || 0), 0);
+
   return (
     <div className="pg-container">
       <div className="pg-header">
@@ -229,6 +237,7 @@ export default function Pagos() {
         {[
           { label: 'Ingresos', value: totalIngresos, accent: '#22c55e' },
           { label: 'Egresos', value: totalEgresos, accent: '#ef4444' },
+          { label: 'Caja Efectivo', value: totalEfectivo, accent: '#f59e0b' },
           { label: 'Neto', value: totalIngresos - totalEgresos, accent: '#6366f1' },
         ].map(({ label, value, accent }) => (
           <div key={label} className="pg-kpi" style={{ borderLeftColor: accent }}>

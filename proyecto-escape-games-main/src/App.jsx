@@ -1,4 +1,3 @@
-// src/App.jsx
 import React, { useContext } from 'react';
 import { AppContext } from './context/AppContext';
 
@@ -12,33 +11,43 @@ import Pagos from './views/Pagos/Pagos';
 import Usuarios from './views/Usuarios/Usuarios';
 import Estadisticas from './views/Estadisticas/Estadisticas';
 import Reportes from './views/Reportes/Reportes';
-
-import './App.css';
 import Integraciones from './views/Integraciones/Integraciones';
+import './App.css';
 
 export default function App() {
   const { currentUser, currentView } = useContext(AppContext);
-  const puedeVerModulosAdmin = currentUser && currentUser.rol !== 'ANALISTA';
 
-  // Selector dinámico de pantallas
+  // Forzamos mayúsculas para que coincida siempre sin importar cómo venga de la base de datos
+  const rol = currentUser?.rol?.toUpperCase() || 'RECEPCIONISTA';
+  
+  // Validaciones de acceso simples
+  const esAdminOGerente = rol === 'ADMIN' || rol === 'MANAGMENT' || rol === 'ANALISTA';
+  const esAnalistaExclusivo = rol === 'ANALISTA';
+
+  // Selector dinámico de pantallas según rol
   const renderActiveView = () => {
     switch (currentView) {
       case 'INICIO':
         return <Inicio />;
       case 'RESERVAS':
         return <Reservas />;
-      case 'ESTADISTICAS':
-        return puedeVerModulosAdmin ? <Estadisticas /> : <Inicio />;
-      case 'REPORTES':
-        return puedeVerModulosAdmin ? <Reportes /> : <Inicio />;
       case 'PAGOS':
         return <Pagos />;
       case 'FACTURACION':
         return <Facturacion />;
+      
+      // Vistas para Socios/Gerentes y Analistas
+      case 'ESTADISTICAS':
+        return esAdminOGerente ? <Estadisticas /> : <Inicio />;
+      case 'REPORTES':
+        return esAdminOGerente ? <Reportes /> : <Inicio />;
+      
+      // Vistas exclusivas del Analista de Sistemas
       case 'INTEGRACION':
-        return <Integraciones />;
+        return esAnalistaExclusivo ? <Integraciones /> : <Inicio />;
       case 'USUARIOS':
-        return <Usuarios />;
+        return esAnalistaExclusivo ? <Usuarios /> : <Inicio />;
+      
       default:
         return <Inicio />;
     }
@@ -51,7 +60,7 @@ export default function App() {
       ) : (
         <>
           <Sidebar />
-          <main className="main-content" style={{ padding: '40px', backgroundColor: '#ffffff' }}>
+          <main className="main-content" style={{ padding: '40px', backgroundColor: '#f8fafc' }}>
             {renderActiveView()}
           </main>
         </>

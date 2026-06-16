@@ -17,12 +17,21 @@ const RESERVAS_DATASET_VERSION = 'reservas-reales-enero-junio-v3';
 const PAYMENTS_DATASET_VERSION = 'pagos-planilla-ingresos-egresos-v2';
 
 const normalizarUsuario = (usuario) => {
-  if (usuario?.email?.toLowerCase() !== 'admin@escaperoom.com') return usuario;
-  return {
-    ...usuario,
-    nombre: 'Usuario Administrador',
-    rol: 'ADMINISTRADOR',
-  };
+  if (!usuario?.email) return usuario;
+  
+  const emailLower = usuario.email.toLowerCase();
+
+  if (emailLower === 'analista@escaperoom.com') {
+    return { ...usuario, nombre: 'Analista Técnico', rol: 'ANALISTA' };
+  }
+  if (emailLower === 'recepcion@escaperoom.com') {
+    return { ...usuario, nombre: 'Recepcionista Demo', rol: 'RECEPCIONISTA' };
+  }
+  if (emailLower === 'socio@escaperoom.com' || emailLower === 'admin@escaperoom.com') {
+    return { ...usuario, nombre: 'Socio Demo', rol: 'ADMIN' };
+  }
+
+  return usuario;
 };
 
 const normalizarUsuarios = (usuarios = []) => usuarios.map(normalizarUsuario);
