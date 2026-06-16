@@ -44,10 +44,12 @@ export default function Facturacion() {
     [payments, fechaDesde, fechaHasta]
   );
 
-  const facturadoPeriodo = reservasDelPeriodo.reduce((acc, res) => {
-    if (estaCancelada(res)) return acc;
-    return acc + resumenFacturacionReserva(res, payments).facturado;
-  }, 0);
+  // Cambiá la lógica actual por esta:
+const facturadoPeriodo = pagosDelPeriodo.reduce((acc, pago) => {
+  // Sumamos todos los ingresos confirmados que no sean egresos
+  const esIngresoValido = pago.tipo === 'Ingreso' && pago.estado === 'Pagado';
+  return esIngresoValido ? acc + Number(pago.monto || 0) : acc;
+}, 0);
 
   const pendienteFacturar = reservasDelPeriodo.reduce((acc, res) => {
     if (estaCancelada(res)) return acc;
@@ -151,7 +153,14 @@ export default function Facturacion() {
                 const esNoAplica = estaCancelada(res);
                 const esSaldado = !esNoAplica && resumen.estaFacturada;
                 const estaPendiente = !esNoAplica && resumen.pendiente > 0;
-                const montoAMostrar = esSaldado ? resumen.facturado : resumen.pendiente;
+                const ingresosPeriodoReserva = pagosDelPeriodo.filter(
+                  (pago) => pago.reservaId === res.id && pago.tipo === 'Ingreso' && pago.estado === 'Pagado'
+                );
+
+                const totalPagadoEnPeriodo = ingresosPeriodoReserva.reduce((acc, p) => acc + Number(p.monto || 0), 0);
+
+
+                const montoAMostrar = totalPagadoEnPeriodo > 0 ? totalPagadoEnPeriodo : (esSaldado ? resumen.facturado : resumen.pendiente);
                 const conceptoDesc = esNoAplica
                   ? `Reserva cancelada ${res.id || ''}`
                   : esSaldado && resumen.pendiente > 0

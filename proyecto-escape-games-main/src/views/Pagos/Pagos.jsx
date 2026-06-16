@@ -310,7 +310,7 @@ export default function Pagos() {
             </tbody>
           </table>
         </div>
-      )
+      
 
       {modalAgregar && (
         <div className="modal-overlay" onClick={() => setModalAgregar(false)}>
