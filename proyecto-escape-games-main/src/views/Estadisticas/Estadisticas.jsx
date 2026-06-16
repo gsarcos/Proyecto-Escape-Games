@@ -8,7 +8,7 @@ const chartColors = ['#f97316', '#fb923c', '#94a3b8', '#475569', '#38bdf8', '#16
 const periodos = [
   { id: 'semana', label: 'Semana' },
   { id: 'mes', label: 'Mes' },
-  { id: 'anio', label: 'Ano' },
+  { id: 'anio', label: 'Año' },
 ];
 const meses = [
   'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -82,7 +82,7 @@ const crearConfigPeriodo = (tipo, filtros) => {
 
   if (tipo === 'anio') {
     return {
-      titulo: `Ano ${anioActual}`,
+      titulo: `Año ${anioActual}`,
       incluye: (fecha) => fecha.getFullYear() === anioActual,
     };
   }
@@ -185,7 +185,7 @@ export default function Estadisticas() {
                 </select>
               </label>
               <label>
-                Ano
+                Año
                 <input
                   type="number"
                   min="2020"
@@ -199,7 +199,7 @@ export default function Estadisticas() {
 
           {periodoActivo === 'anio' && (
             <label>
-              Ano
+              Año
               <input
                 type="number"
                 min="2020"
