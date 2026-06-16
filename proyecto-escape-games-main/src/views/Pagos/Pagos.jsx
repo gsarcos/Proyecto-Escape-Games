@@ -1,7 +1,6 @@
 // src/views/Pagos/Pagos.jsx
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { AppContext } from '../../context/AppContext';
-import CajaChica from './components/CajaChica/CajaChica';
 import './Pagos.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
@@ -278,19 +277,7 @@ export default function Pagos() {
         </div>
       </div>
 
-      <div className="pg-tabs">
-        {['movimientos', 'caja'].map((item) => (
-          <button
-            key={item}
-            className={`pg-tab ${tab === item ? 'pg-tab--active' : ''}`}
-            onClick={() => setTab(item)}
-          >
-            {item === 'movimientos' ? 'Movimientos' : 'Caja Chica'}
-          </button>
-        ))}
-      </div>
-
-      {tab === 'movimientos' ? (
+      
         <div className="pg-tabla-wrapper">
           <table className="pg-tabla">
             <thead>
@@ -323,9 +310,7 @@ export default function Pagos() {
             </tbody>
           </table>
         </div>
-      ) : (
-        <CajaChica payments={pagosFiltrados} />
-      )}
+      )
 
       {modalAgregar && (
         <div className="modal-overlay" onClick={() => setModalAgregar(false)}>

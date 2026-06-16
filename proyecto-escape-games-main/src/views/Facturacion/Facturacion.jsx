@@ -86,9 +86,6 @@ export default function Facturacion() {
           <h1>Control de Facturacion</h1>
           <p className="subtitle">Control mensual de reservas facturadas, pendientes y no aplicables</p>
         </div>
-        <button className="btn-cierre-caja" onClick={() => alert('Cierre de caja exportado al sistema contable.')}>
-          <i className="fa-solid fa-vault"></i> Realizar Cierre de Caja
-        </button>
       </header>
 
       <section className="periodo-card" aria-label="Seleccion de periodo">
@@ -216,23 +213,6 @@ export default function Facturacion() {
         </table>
       </div>
 
-      <section className="cierre-rapido-section">
-        <h2>Control Rapido de Caja Chica</h2>
-        <div className="cierre-grid-inputs">
-          <div className="input-fin-group">
-            <label>Efectivo Inicial (Apertura)</label>
-            <input type="text" placeholder="$15.000" disabled />
-          </div>
-          <div className="input-fin-group">
-            <label>Ingresos Declarados en Turno</label>
-            <input type="text" value={`$${facturadoPeriodo.toLocaleString('es-AR')}`} disabled />
-          </div>
-          <div className="input-fin-group">
-            <label>Retiros / Gastos de Caja</label>
-            <input type="number" placeholder="Ej: $1.200 (Art. Limpieza)" />
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
