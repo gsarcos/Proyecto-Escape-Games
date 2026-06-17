@@ -13,8 +13,8 @@ import { calcularResumenPagoReserva } from '../utils/reservasFinanzas';
 export const AppContext = createContext();
 
 const FACTURACION_STATE_VERSION = 'facturacion-demo-pendientes-v1';
-const RESERVAS_DATASET_VERSION = 'reservas-reales-enero-junio-v3';
-const PAYMENTS_DATASET_VERSION = 'pagos-planilla-ingresos-egresos-v2';
+const RESERVAS_DATASET_VERSION = 'reservas-reales-enero-junio-v4';
+const PAYMENTS_DATASET_VERSION = 'pagos-planilla-ingresos-egresos-v3';
 
 const normalizarUsuario = (usuario) => {
   if (!usuario?.email) return usuario;
@@ -35,6 +35,17 @@ const normalizarUsuario = (usuario) => {
 };
 
 const normalizarUsuarios = (usuarios = []) => usuarios.map(normalizarUsuario);
+
+const fusionarPorId = (base = [], nuevas = []) => {
+  const porId = new Map();
+  base.forEach((item) => {
+    if (item?.id) porId.set(item.id, item);
+  });
+  nuevas.forEach((item) => {
+    if (item?.id && !porId.has(item.id)) porId.set(item.id, item);
+  });
+  return Array.from(porId.values());
+};
 
 const normalizarReservas = (reservas = []) => {
   const porId = new Map();
@@ -60,7 +71,8 @@ const cargarReservasPersistidas = () => {
 
   if (datasetVersion !== RESERVAS_DATASET_VERSION) {
     localStorage.setItem('er_reservations_dataset_version', RESERVAS_DATASET_VERSION);
-    return normalizarReservas(initialReservations);
+    const guardadas = saved ? JSON.parse(saved) : [];
+    return normalizarReservas(fusionarPorId(guardadas, initialReservations));
   }
 
   const reservasBase = normalizarReservas(saved ? JSON.parse(saved) : initialReservations);
@@ -80,7 +92,8 @@ const cargarPagosPersistidos = () => {
 
   if (datasetVersion !== PAYMENTS_DATASET_VERSION) {
     localStorage.setItem('er_payments_dataset_version', PAYMENTS_DATASET_VERSION);
-    return initialPayments;
+    const guardados = saved ? JSON.parse(saved) : [];
+    return fusionarPorId(guardados, initialPayments);
   }
 
   return saved ? JSON.parse(saved) : initialPayments;
