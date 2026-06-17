@@ -1,7 +1,8 @@
 import { useContext, useMemo, useState } from 'react';
 import { AppContext } from '../../context/AppContext';
 import MetricCard from '../../components/MetricCard/MetricCard';
-import { estaCancelada, resumenFacturacionReserva } from '../../utils/facturacion';
+// Usamos el calculador de precio con descuentos para saber cuánto vale la reserva
+import { calcularPrecioReserva } from '../../utils/reservasFinanzas';
 import './Facturacion.css';
 
 const fechaIsoLocal = (fecha) => {
@@ -44,16 +45,16 @@ export default function Facturacion() {
     [payments, fechaDesde, fechaHasta]
   );
 
-  // Cambiá la lógica actual por esta:
-const facturadoPeriodo = pagosDelPeriodo.reduce((acc, pago) => {
-  // Sumamos todos los ingresos confirmados que no sean egresos
-  const esIngresoValido = pago.tipo === 'Ingreso' && pago.estado === 'Pagado';
-  return esIngresoValido ? acc + Number(pago.monto || 0) : acc;
-}, 0);
+  // 1. FACTURADO: Suma del valor real (con descuentos) de las reservas confirmadas como facturadas manuales
+  const facturadoPeriodo = reservasDelPeriodo.reduce((acc, res) => {
+    if (res.estado === 'Cancelada' || !res.facturado) return acc;
+    return acc + calcularPrecioReserva(res);
+  }, 0);
 
+  // 2. PENDIENTE FACTURAR: Solo resta cuando res.facturado pasa a ser true mediante el botón
   const pendienteFacturar = reservasDelPeriodo.reduce((acc, res) => {
-    if (estaCancelada(res)) return acc;
-    return acc + resumenFacturacionReserva(res, payments).pendiente;
+    if (res.estado === 'Cancelada' || res.facturado) return acc;
+    return acc + calcularPrecioReserva(res);
   }, 0);
 
   const efectivoNoFacturable = pagosDelPeriodo.reduce((acc, pago) => {
@@ -62,12 +63,7 @@ const facturadoPeriodo = pagosDelPeriodo.reduce((acc, pago) => {
     return esIngresoEfectivo && estaPagado ? acc + Number(pago.monto || 0) : acc;
   }, 0);
 
-  const registrosFiltrados = reservasDelPeriodo.filter((res) => {
-    if (filtroPago === 'Todos') return true;
-    const resumen = resumenFacturacionReserva(res, payments);
-    if (filtroPago === 'Pagado') return resumen.estaFacturada;
-    return !resumen.estaFacturada && !estaCancelada(res);
-  });
+  const registrosFiltrados = reservasDelPeriodo;
 
   const marcarFacturado = (reservaId) => {
     const hoyIso = new Date().toISOString().slice(0, 10);
@@ -140,52 +136,43 @@ const facturadoPeriodo = pagosDelPeriodo.reduce((acc, pago) => {
             <tr>
               <th>FECHA</th>
               <th>DESCRIPCION</th>
-              <th>MONTO</th>
+              <th>MONTO RESERVA</th>
               <th>COMO FACTURAR</th>
-              <th>ESTADO</th>
+              <th>ESTADO CONTABLE</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
             {registrosFiltrados.length > 0 ? (
               registrosFiltrados.map((res) => {
-                const resumen = resumenFacturacionReserva(res, payments);
-                const esNoAplica = estaCancelada(res);
-                const esSaldado = !esNoAplica && resumen.estaFacturada;
-                const estaPendiente = !esNoAplica && resumen.pendiente > 0;
-                const ingresosPeriodoReserva = pagosDelPeriodo.filter(
-                  (pago) => pago.reservaId === res.id && pago.tipo === 'Ingreso' && pago.estado === 'Pagado'
-                );
+                const esNoAplica = res.estado === 'Cancelada';
+                const esSaldadoContable = !!res.facturado;
+                const estaPendienteContable = !esNoAplica && !esSaldadoContable;
 
-                const totalPagadoEnPeriodo = ingresosPeriodoReserva.reduce((acc, p) => acc + Number(p.monto || 0), 0);
-
-
-                const montoAMostrar = totalPagadoEnPeriodo > 0 ? totalPagadoEnPeriodo : (esSaldado ? resumen.facturado : resumen.pendiente);
+                const montoTotalReserva = calcularPrecioReserva(res);
+                
                 const conceptoDesc = esNoAplica
                   ? `Reserva cancelada ${res.id || ''}`
-                  : esSaldado && resumen.pendiente > 0
-                    ? `Facturado parcial ${res.id || ''}`
-                    : esSaldado
-                      ? `Facturado reserva ${res.id || ''}`
-                      : `Proximo a facturar ${res.id || ''}`;
+                  : esSaldadoContable
+                    ? `Facturado reserva ${res.id || ''}`
+                    : `Proximo a facturar ${res.id || ''}`;
+                    
                 const estadoTexto = esNoAplica
                   ? 'No aplica'
-                  : esSaldado && resumen.pendiente > 0
-                    ? 'Facturado parcial'
-                    : esSaldado
-                      ? 'Facturado'
-                      : 'Pendiente de facturar';
-                const estadoClase = esNoAplica ? 'no-aplica' : esSaldado ? 'facturado' : 'pendiente';
-                const metodoClase = 'web';
+                  : esSaldadoContable
+                    ? 'Facturado'
+                    : 'Pendiente de facturar';
+                    
+                const estadoClase = esNoAplica ? 'no-aplica' : esSaldadoContable ? 'facturado' : 'pendiente';
                 const metodoTexto = 'Web - Facturante';
 
                 return (
                   <tr key={res.id}>
                     <td>{res.fecha}</td>
                     <td>{conceptoDesc} - {res.sala} ({res.cliente})</td>
-                    <td className="txt-monto">${montoAMostrar.toLocaleString('es-AR')}</td>
+                    <td className="txt-monto">${montoTotalReserva.toLocaleString('es-AR')}</td>
                     <td>
-                      <span className={`badge-metodo ${metodoClase}`}>{metodoTexto}</span>
+                      <span className={`badge-metodo web`}>{metodoTexto}</span>
                     </td>
                     <td>
                       <span className={`badge-estado ${estadoClase}`}>
@@ -193,14 +180,14 @@ const facturadoPeriodo = pagosDelPeriodo.reduce((acc, pago) => {
                       </span>
                     </td>
                     <td className="text-right">
-                      {estaPendiente ? (
+                      {estaPendienteContable ? (
                         <button
                           className="btn-marcar-facturado"
                           onClick={() => marcarFacturado(res.id)}
                         >
                           <i className="fa-solid fa-check"></i> Marcar facturado
                         </button>
-                      ) : esSaldado ? (
+                      ) : esSaldadoContable ? (
                         <span className="check-facturado-icon">
                           <i className="fa-solid fa-circle-check"></i>
                         </span>
@@ -221,7 +208,6 @@ const facturadoPeriodo = pagosDelPeriodo.reduce((acc, pago) => {
           </tbody>
         </table>
       </div>
-
     </div>
   );
 }

@@ -8,15 +8,7 @@ const ROLES = ['ADMINISTRADOR', 'RECEPCIONISTA', 'ANALISTA'];
 export default function Usuarios() {
   const { users, setUsers, currentUser, triggerToast } = useContext(AppContext);
 
-  if (!currentUser || currentUser.rol === 'ANALISTA') {
-    return (
-      <div className="usr-restricted">
-        <div className="usr-restricted-icon">🔒</div>
-        <h2>Acceso restringido</h2>
-        <p>Esta sección es exclusiva para el rol Analista.</p>
-      </div>
-    );
-  }
+
 
   const [modalAgregar, setModalAgregar]   = useState(false);
   const [modalEditar, setModalEditar]     = useState(null);
