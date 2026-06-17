@@ -12,9 +12,10 @@ import { calcularResumenPagoReserva } from '../utils/reservasFinanzas';
 
 export const AppContext = createContext();
 
-const FACTURACION_STATE_VERSION = 'facturacion-demo-pendientes-v1';
+const FACTURACION_STATE_VERSION = 'facturacion-hasta-2026-06-15-v1';
 const RESERVAS_DATASET_VERSION = 'reservas-reales-enero-junio-v4';
 const PAYMENTS_DATASET_VERSION = 'pagos-planilla-ingresos-egresos-v3';
+const FECHA_CIERRE_FACTURACION = '2026-06-15';
 
 const normalizarUsuario = (usuario) => {
   if (!usuario?.email) return usuario;
@@ -65,6 +66,21 @@ const limpiarEstadoFacturacion = (reservas = []) => reservas.map((reserva) => {
   return datosReserva;
 });
 
+const aplicarCierreFacturacion = (reservas = []) => reservas.map((reserva) => {
+  if (!reserva?.fecha) return reserva;
+
+  if (reserva.fecha <= FECHA_CIERRE_FACTURACION) {
+    return {
+      ...reserva,
+      facturado: true,
+      fechaFacturacion: reserva.fechaFacturacion || FECHA_CIERRE_FACTURACION,
+    };
+  }
+
+  const { facturado, fechaFacturacion, ...datosReserva } = reserva;
+  return datosReserva;
+});
+
 const cargarReservasPersistidas = () => {
   const saved = localStorage.getItem('er_reservations');
   const datasetVersion = localStorage.getItem('er_reservations_dataset_version');
@@ -72,7 +88,7 @@ const cargarReservasPersistidas = () => {
   if (datasetVersion !== RESERVAS_DATASET_VERSION) {
     localStorage.setItem('er_reservations_dataset_version', RESERVAS_DATASET_VERSION);
     const guardadas = saved ? JSON.parse(saved) : [];
-    return normalizarReservas(fusionarPorId(guardadas, initialReservations));
+    return aplicarCierreFacturacion(normalizarReservas(fusionarPorId(guardadas, initialReservations)));
   }
 
   const reservasBase = normalizarReservas(saved ? JSON.parse(saved) : initialReservations);
@@ -80,10 +96,10 @@ const cargarReservasPersistidas = () => {
 
   if (saved && versionFacturacion !== FACTURACION_STATE_VERSION) {
     localStorage.setItem('er_facturacion_state_version', FACTURACION_STATE_VERSION);
-    return limpiarEstadoFacturacion(reservasBase);
+    return aplicarCierreFacturacion(limpiarEstadoFacturacion(reservasBase));
   }
 
-  return reservasBase;
+  return aplicarCierreFacturacion(reservasBase);
 };
 
 const cargarPagosPersistidos = () => {
@@ -136,7 +152,7 @@ export const AppProvider = ({ children }) => {
   const [fechaAuditoria, setFechaAuditoria] = useState(isoHoy());
   const [paymentDraft, setPaymentDraft] = useState(null);
 
-  useEffect(() => { setReservations((prev) => normalizarReservas(prev)); }, []);
+  useEffect(() => { setReservations((prev) => aplicarCierreFacturacion(normalizarReservas(prev))); }, []);
   useEffect(() => { setUsers((prev) => normalizarUsuarios(prev)); }, []);
   useEffect(() => {
     setReservations((prev) => {
